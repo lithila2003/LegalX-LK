@@ -1,0 +1,72 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color:  #cfcfcf;
+  color: #333;
+}
+
+.homepage {
+  margin: 0px;
+
+}
+
+/* Section Styles */
+.section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 13rem;
+  padding-right: 12rem;
+  padding-top: 5rem;
+  padding-bottom: 5rem; 
+  
+}
+
+.section-tasks {
+  flex-direction: row-reverse;
+}
+
+.section-gazzets {
+  flex-direction: row-reverse;
+}
+
+.section:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.text-content {
+  max-width: 45%;
+}
+
+.text-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.highlight {
+  color: #af7e4c;
+}
+
+.btn {
+  background-color: #142030;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  margin-left: 100px;
+  margin-top: 1rem;
+}
+
+.btn:hover {
+  background-color: #3c3c3c;
+}
+
+/* Image Styles */
+.image-content img {
+  width: 600px;
+  height: 400px;
+  border-radius: 20px;
+}
