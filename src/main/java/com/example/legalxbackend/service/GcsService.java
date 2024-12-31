@@ -1,8 +1,9 @@
 package com.example.legalxbackend.service;
 
+import com.example.legalxbackend.model.WithFileType;
+import com.google.api.gax.paging.Page;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class GcsService {
@@ -59,13 +61,19 @@ public class GcsService {
         logger.info("Starting file upload: {}", file.getOriginalFilename());
 
         try {
-            // Generate a unique filename
-            String filename = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+            // Use the original filename
+            String filename = file.getOriginalFilename();
+
+            // Set the content type for .docx files
+            String contentType = file.getContentType();
+            if (filename.endsWith(".docx")) {
+                contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            }
 
             // Create blob info
             BlobId blobId = BlobId.of(bucketName, filename);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
-                    .setContentType(file.getContentType())
+                    .setContentType(contentType)
                     .build();
 
             // Upload file to GCS
@@ -81,32 +89,38 @@ public class GcsService {
         }
     }
 
-    public Resource downloadFile(String fileName) {
-        try {
-            Blob blob = storage.get(bucketName, fileName);
-            if (blob == null) {
-                throw new StorageException(404, "File not found: " + fileName);
-            }
-
-            byte[] content = blob.getContent();
-            return new ByteArrayResource(content);
-        } catch (StorageException e) {
-            logger.error("Error downloading file: {}", fileName, e);
-            throw e;
+    public List<String> listFiles() {
+        List<String> fileNames = new ArrayList<>();
+        Page<Blob> blobs = storage.list(bucketName);
+        for (Blob blob : blobs.iterateAll()) {
+            fileNames.add(blob.getName());
         }
+        return fileNames;
     }
 
     public void deleteFile(String fileName) {
-        try {
-            BlobId blobId = BlobId.of(bucketName, fileName);
-            boolean deleted = storage.delete(blobId);
-
-            if (!deleted) {
-                throw new StorageException(404, "File not found: " + fileName);
-            }
-        } catch (StorageException e) {
-            logger.error("Error deleting file: {}", fileName, e);
-            throw e;
+        logger.info("Attempting to delete file: {}", fileName);
+        BlobId blobId = BlobId.of(bucketName, fileName);
+        Blob blob = storage.get(blobId);
+        if (blob == null) {
+            logger.warn("File {} not found in bucket {}", fileName, bucketName);
+            return;
         }
+        boolean deleted = storage.delete(blobId);
+        if (deleted) {
+            logger.info("File {} deleted successfully", fileName);
+        } else {
+            logger.warn("Failed to delete file {}", fileName);
+        }
+    }
+
+    public WithFileType downloadFile(String fileName) {
+        logger.info("Attempting to download file: {}", fileName);
+        Blob blob = storage.get(BlobId.of(bucketName, fileName));
+        if (blob == null) {
+            logger.warn("File {} not found in bucket {}", fileName, bucketName);
+            return null;
+        }
+        return new WithFileType(new ByteArrayResource(blob.getContent()), blob.getContentType());
     }
 }
