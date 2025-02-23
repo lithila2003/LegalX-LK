@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,49 +24,38 @@ public class FileUploadController {
     private GcsService gcsService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
-        try {
-            if (file == null || file.isEmpty()) {
-                logger.error("Received empty or null file");
-                return ResponseEntity.badRequest().body("Please select a file to upload");
-            }
-
-            logger.info("Received file: {} (size: {} bytes)", file.getOriginalFilename(), file.getSize());
-            String publicUrl = gcsService.uploadFile(file);
-            return ResponseEntity.ok().body(publicUrl);
-
-        } catch (IllegalArgumentException e) {
-            logger.error("Invalid request", e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (IllegalStateException e) {
-            logger.error("Service configuration error", e);
-            return ResponseEntity.internalServerError().body("Service not properly configured");
-        } catch (Exception e) {
-            logger.error("Failed to upload file", e);
-            return ResponseEntity.internalServerError().body("Failed to upload file: " + e.getMessage());
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) throws IOException {
+        if (file == null || file.isEmpty()) {
+            logger.error("Received empty or null file");
+            return ResponseEntity.badRequest().body("Please select a file to upload");
         }
+
+        logger.info("Received file from user: {}", userId);
+        String fileUrl = gcsService.uploadFile(file, userId);
+        return ResponseEntity.ok().body(fileUrl);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<String>> listFiles() {
-        List<String> fileNames = gcsService.listFiles();
+    public ResponseEntity<List<String>> listFiles(@RequestParam("userId") String userId) {
+        List<String> fileNames = gcsService.listFiles(userId);
         return ResponseEntity.ok().body(fileNames);
     }
 
+
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteFile(@RequestParam("fileName") String fileName) {
-        try {
-            gcsService.deleteFile(fileName);
+    public ResponseEntity<String> deleteFile(@RequestParam("userId") String userId, @RequestParam("fileName") String fileName) {
+        boolean isDeleted = gcsService.deleteFile(userId, fileName);
+
+        if (isDeleted) {
             return ResponseEntity.ok().body("File deleted successfully");
-        } catch (Exception e) {
-            logger.error("Failed to delete file", e);
-            return ResponseEntity.internalServerError().body("Failed to delete file: " + e.getMessage());
+        } else {
+            return ResponseEntity.status(404).body("File not found or could not be deleted");
         }
     }
 
     @GetMapping("/download")
-    public ResponseEntity<Resource> downloadFile(@RequestParam("fileName") String fileName) {
-        WithFileType file = gcsService.downloadFile(fileName);
+    public ResponseEntity<Resource> downloadFile(@RequestParam("userId") String userId, @RequestParam("fileName") String fileName) {
+        WithFileType file = gcsService.downloadFile(userId, fileName);
         if (file == null) {
             return ResponseEntity.notFound().build();
         }
@@ -74,4 +64,5 @@ public class FileUploadController {
                 .contentType(MediaType.parseMediaType(file.getContentType()))
                 .body(file.getResource());
     }
+
 }

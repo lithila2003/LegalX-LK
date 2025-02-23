@@ -22,7 +22,7 @@ import java.util.List;
 public class GcsService {
     private static final Logger logger = LoggerFactory.getLogger(GcsService.class);
 
-    @Value("${gcs.bucket.name}")
+    @Value("legalx")
     private String bucketName;
 
     @Value("${gcs.credentials.file-name}")
@@ -49,7 +49,7 @@ public class GcsService {
         }
     }
 
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file, String userId) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File cannot be null or empty");
         }
@@ -58,69 +58,75 @@ public class GcsService {
             throw new IllegalStateException("GCS service not properly initialized");
         }
 
-        logger.info("Starting file upload: {}", file.getOriginalFilename());
+        logger.info("Starting file upload for user: {}", userId);
 
         try {
-            // Use the original filename
-            String filename = file.getOriginalFilename();
-
-            // Set the content type for .docx files
+            String filename = userId + "/" + file.getOriginalFilename();
             String contentType = file.getContentType();
-            if (filename.endsWith(".docx")) {
-                contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-            }
 
-            // Create blob info
             BlobId blobId = BlobId.of(bucketName, filename);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                     .setContentType(contentType)
                     .build();
 
-            // Upload file to GCS
             storage.create(blobInfo, file.getBytes());
 
-            String publicUrl = String.format("https://storage.googleapis.com/%s/%s", bucketName, filename);
-            logger.info("File uploaded successfully. Public URL: {}", publicUrl);
-            return publicUrl;
+            String fileUrl = String.format("https://storage.googleapis.com/%s/%s", bucketName, filename);
+            logger.info("File uploaded successfully for user: {}", userId);
+            return fileUrl;
 
         } catch (IOException e) {
-            logger.error("Failed to upload file: {}", file.getOriginalFilename(), e);
+            logger.error("Failed to upload file for user: {}", userId, e);
             throw new IOException("Failed to upload file: " + e.getMessage(), e);
         }
     }
 
-    public List<String> listFiles() {
+
+    public List<String> listFiles(String userId) {
         List<String> fileNames = new ArrayList<>();
         Page<Blob> blobs = storage.list(bucketName);
+
         for (Blob blob : blobs.iterateAll()) {
-            fileNames.add(blob.getName());
+            if (blob.getName().startsWith(userId + "/")) { // Filter files by userId
+                fileNames.add(blob.getName().replace(userId + "/", "")); // Remove userId from response
+            }
         }
         return fileNames;
     }
 
-    public void deleteFile(String fileName) {
-        logger.info("Attempting to delete file: {}", fileName);
-        BlobId blobId = BlobId.of(bucketName, fileName);
+
+    public boolean deleteFile(String userId, String fileName) {
+        String userFile = userId + "/" + fileName;
+        BlobId blobId = BlobId.of(bucketName, userFile);
         Blob blob = storage.get(blobId);
+
         if (blob == null) {
-            logger.warn("File {} not found in bucket {}", fileName, bucketName);
-            return;
+            logger.warn("File {} not found for user {}", fileName, userId);
+            return false; // Return false if file does not exist
         }
+
         boolean deleted = storage.delete(blobId);
         if (deleted) {
-            logger.info("File {} deleted successfully", fileName);
+            logger.info("File {} deleted successfully for user {}", fileName, userId);
+            return true;
         } else {
-            logger.warn("Failed to delete file {}", fileName);
+            logger.warn("Failed to delete file {} for user {}", fileName, userId);
+            return false;
         }
     }
 
-    public WithFileType downloadFile(String fileName) {
-        logger.info("Attempting to download file: {}", fileName);
-        Blob blob = storage.get(BlobId.of(bucketName, fileName));
+
+
+    public WithFileType downloadFile(String userId, String fileName) {
+        String userFile = userId + "/" + fileName;
+        Blob blob = storage.get(BlobId.of(bucketName, userFile));
+
         if (blob == null) {
-            logger.warn("File {} not found in bucket {}", fileName, bucketName);
+            logger.warn("File {} not found for user {}", fileName, userId);
             return null;
         }
+
         return new WithFileType(new ByteArrayResource(blob.getContent()), blob.getContentType());
     }
+
 }
