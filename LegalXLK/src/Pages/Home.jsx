@@ -44,7 +44,7 @@ const HomePage = () => {
       linkedin: "https://www.linkedin.com/in/lithira-wettasinghe-540220232/"
     },
     {
-      name: "Thinura Dinuth Jayathunga",
+      name: "Thinura Jayathunga",
       role: "",
       image: "/images/thinura.jpeg",
       github: "https://github.com/Thinura-dinuth?tab=repositories",

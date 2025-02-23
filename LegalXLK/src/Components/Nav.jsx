@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './Nav.css';
 import Logo from '../assets/Logo-white.png';
+import { Link } from 'react-router-dom';
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,8 +51,8 @@ const Nav = () => {
 
 
           <div className='navbar--options'>
-              <NavLink to="/signup" className="navbar--signup">Sign Up</NavLink>
-              <NavLink to="/login" className="navbar--login">Login</NavLink>
+              <Link to="/signup" className="navbar--signup">Sign Up</Link>
+              <Link to="/login" className="navbar--login">Login</Link>
           </div>
         </div>
     </nav>
