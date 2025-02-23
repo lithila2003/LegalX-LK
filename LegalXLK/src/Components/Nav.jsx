@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import './Nav.css';
 import Logo from '../assets/Logo-white.png';
-import { NavLink } from 'react-router';
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
