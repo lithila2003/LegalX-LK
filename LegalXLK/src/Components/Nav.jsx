@@ -1,22 +1,61 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Nav.css';
-import Image from '../assets/Logo.png';
+import Logo from '../assets/Logo-white.png';
+import { NavLink } from 'react-router';
 
 const Nav = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      setIsMenuOpen(false);
+      
+      const navbarHeight = document.querySelector('.navbar').offsetHeight;
+      
+      const elementPosition = element.getBoundingClientRect().top;
+      
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+  
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
   return (
-         <nav className="navbar">
-          <div className='navbar-left'>
-            <img src={Image} alt="Logo" />
-            <h1 className="logo">LegalX LK</h1>
+    <nav className="navbar">
+        <div className='navbar--logo'>
+          <img src={Logo} alt="Logo" />
+          <h1>LegalX LK</h1>
+        </div>
+
+        <div className="navbar--menu-icon" onClick={toggleMenu}>
+          <div className={`menu-icon ${isMenuOpen ? 'open' : ''}`}>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-            <ul>
-              <li><a href="#home" className="active">Home</a></li>
-              <li><a href="#calendar">Calendar</a></li>
-              <li><a href="#services">Services</a></li>
-              <li><a href="#page">Page</a></li>
-              <li><a href="#logout">Log Out</a></li>
-            </ul>
-          </nav>
+        </div>
+
+        <div className={`navbar--links ${isMenuOpen ? 'active' : ''}`}>
+          <a onClick={() => scrollToSection('home')} className="navbar--link">Home</a>
+          <a onClick={() => scrollToSection('features')} className="navbar--link">Features</a>
+          <a onClick={() => scrollToSection('aboutus')} className="navbar--link">About Us</a>
+          <a onClick={() => scrollToSection('contactus')} className="navbar--link">Contact Us</a>
+
+
+          <div className='navbar--options'>
+              <NavLink to="/signup" className="navbar--signup">Sign Up</NavLink>
+              <NavLink to="/login" className="navbar--login">Login</NavLink>
+          </div>
+        </div>
+    </nav>
   )
 }
 

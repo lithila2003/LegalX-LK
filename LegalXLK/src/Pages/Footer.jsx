@@ -1,6 +1,6 @@
 import './Footer.css';
 import { FaFacebook, FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa';
-import Image from '../assets/Logo.png';
+import Image from '../assets/Logo-white.png';
 
 export default function Footer() {
   return (
@@ -14,13 +14,11 @@ export default function Footer() {
         <div className="column">
           <h3>About Us</h3>
           <p>
-            Our platform empowers lawyers with secure, efficient, and innovative tools for case management, client communication, legal research, and streamlined workflows, enhancing productivity and client service.
+            Our platform empowers lawyers with secure, efficient, and innovative tools for case management, legal research, and streamlined workflows, enhancing productivity and client service.
           </p>
           <div className="socialIcons">
-            <FaFacebook size={20} />
-            <FaLinkedin size={20} />
-            <FaTwitter size={20} />
-            <FaInstagram size={20} />
+            <a href="http://www.linkedin.com/in/legalx-lk"><FaLinkedin size={20} color='white'/></a>
+            <a href="https://www.instagram.com/legalx_lk?igsh=MTgwd3I3cnFyNHVrbw=="><FaInstagram size={20} color='white'/></a>
           </div>
         </div>
 
@@ -31,18 +29,6 @@ export default function Footer() {
             <li>Task and Reminders</li>
             <li>Documents analyzations and summarizations</li>
             <li>Gazettes updates</li>
-            <li>Contacting clients</li>
-          </ul>
-        </div>
-
-        <div className="column">
-          <h3>Page</h3>
-          <ul>
-            <li>Lawyer</li>
-            <li>Appointment</li>
-            <li>Documentation</li>
-            <li>Cases</li>
-            <li>News</li>
           </ul>
         </div>
 
@@ -57,8 +43,7 @@ export default function Footer() {
         <div className="column">
           <h3>Contact Us</h3>
           <ul>
-            <li><span>+94701563481</span></li>
-            <li>117 Sri Lanka</li>
+            <li>+94 70 1563 481</li>
             <li>legalxlk@gmail.com</li>
           </ul>
         </div>

@@ -1,76 +1,214 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Home.css';
-import Image from '../assets/Logo.png';
-import Image1 from '../assets/Organize Documents.jpeg';
-import Image2 from '../assets/Task and Reminders.jpeg';
-import Image3 from '../assets/Document Analyzation.jpeg';
-import Image4 from '../assets/Gazette Updates.jpg';
-import Image5 from '../assets/Contacting Clients.jpeg';
 import Footer from './Footer';
 import Nav from '../Components/Nav';
+import { NavLink } from 'react-router';
+import { Bot, FileText, Calendar, Bell, Boxes, MessageSquare, Clock, Search } from "lucide-react";
+import TeamMember from '../Components/TeamMember';
 
 const HomePage = () => {
+  const members = [
+    {
+      name: "Vidun Wickramasinghe",
+      role: "",
+      image: "/images/vidun.jpeg",
+      github: "https://github.com/vidun200",
+      linkedin :"https://www.linkedin.com/in/vidun-wickramasinghe-677095339/"
+    },
+    {
+      name: "Shivanka Maddumarachchi",
+      role: "",
+      image: "/images/shivanka.jpeg",
+      linkedin: "https://www.linkedin.com/in/shivanka-maddumarachchi-414b0b262/",
+      github: "https://github.com/ShivankaVM"
+    },
+    {
+      name: "Uthpala Wijesundara ",
+      role: "",
+      image: "/images/uthpala.jpeg",
+      github: "https://github.com/UthpalaWijesundara",
+      linkedin: "https://www.linkedin.com/in/uthpala-wijesundara"
+    },
+    {
+      name: "Lithila Mahagedara",
+      role:"",
+      image: "/images/lithila.jpeg",
+      github: "https://github.com/lithila2003",
+      linkedin: "https://www.linkedin.com/in/lithila-mahagedara-48a53a320/"
+    },
+    {
+      name: "Lithira wettasinghe",
+      role: "",
+      image: "/images/lithira.jpeg",
+      github: "https://github.com/Lithira7",
+      linkedin: "https://www.linkedin.com/in/lithira-wettasinghe-540220232/"
+    },
+    {
+      name: "Thinura Dinuth Jayathunga",
+      role: "",
+      image: "/images/thinura.jpeg",
+      github: "https://github.com/Thinura-dinuth?tab=repositories",
+      linkedin: "https://www.linkedin.com/in/thinu-jaya?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+    },
+  ];
+
   return (
-    <div className="homepage">
+    <div>
       <Nav />
 
-      {/* Section 1 - Organize Documents */}
-      <section className="section section-documents">
-        <div className="text-content">
-          <h2>Organize <span className="highlight">Documents</span></h2>
-          <button className="btn">Get started</button>
-        </div>
-        <div className="image-content">
-          <img src={Image1} alt="Documents management" />
+      <section className='home--top' id='home'>
+        <div>
+          <h1>Sri Lanka's Premier AI-Powered Legal Platform</h1>
+          <h3>Experience the future of legal services with LegalX LK's AI-assisted platform and comprehensive management tools.</h3>
+          <NavLink to="/signup" className="home--top-btn"><button>Try Now</button></NavLink>
         </div>
       </section>
 
-      {/* Section 2 - Task and Reminders */}
-      <section className="section section-tasks">
-        <div className="image-content">
-          <img src={Image2} alt="Gavel and Calendar" />
+      <section className='home--solutions' id='features'>
+        <h1>Smart Legal Solutions</h1>
+
+        <div className='home--solutions-container'>
+          <div className='home--solutions-card'>
+            <Bot className='home--solutions-icon'/>
+            <h3>AI Legal Assistant</h3>
+            <p>24/7 AI-powered legal guidance and instant answers to your questions.</p>
+          </div>
+
+          <div className='home--solutions-card'>
+            <Bell className='home--solutions-icon'/>
+            <h3>Gazette Updatest</h3>
+            <p>Real-time notifications for legal gazette updates and changes.</p>
+          </div>
+
+          <div className='home--solutions-card'>
+            <Boxes className='home--solutions-icon'/>
+            <h3>Document Management</h3>
+            <p>Secure, intelligent document organization and retrieval system.</p>
+          </div>
+
+          <div className='home--solutions-card'>
+            <Calendar className='home--solutions-icon'/>
+            <h3>Task Management</h3>
+            <p>Streamlined case and task tracking with automated reminders.</p>
+          </div>
         </div>
-        <div className="text-content">
-          <h2>Task And <span className="highlight">Reminders</span></h2>
-          <button className="btn">Add Events</button>
+
+      </section>
+
+      <section className='home--assistant' id='chatbot'>
+          <div className='home--assistant-details'>
+            <h1>Meet Your AI Legal Assistant</h1>
+            <p>The chatbot analyzes case details and past judgments using AI to provide tailored recommendations and insights. Lawyers can interact with it to refine strategies, generate ideas, and streamline case management efficiently.</p>
+
+            <div className='home--assistant-try'>
+              <div className='home--assistant-try-heading'>
+                <MessageSquare />
+                <h4>Try asking</h4>
+              </div>
+
+              <div className='home--assistant-try-commands'>
+                <p>"Analyze this contract for potential risks"</p>
+                <p>"Summarize recent employment law changes"</p>
+              </div>
+            </div>
+          </div>
+        
+
+          <div className='home--assistant-chat'>
+            <div>
+              <div className='home-assistant-chat-heading'>
+                <h3>AI Chat Interface</h3>
+                <Bot />
+              </div>
+
+              <div className='home--assistant-chat-reply'>
+                <p>Hello! I'm your AI legal assistant. How can I help you today?</p>
+              </div>
+            </div>
+
+            <div className='home--assistant-chat-input'>
+              <input type="text" placeholder='Type your legal questions...' disabled/>
+              <Search />
+            </div>
         </div>
       </section>
 
-      {/* Section 3 - Document Analysis */}
-      <section className="section section-analysis">
-        <div className="text-content">
-          <h2>Document Analyzation And <span className="highlight">Summarization</span></h2>
-          <button className="btn">Get Started</button>
-        </div>
-        <div className="image-content">
-          <img src={Image3} alt="Document Analysis" />
+      <section className='home--management'>
+          <h1>Comprehensive Legal Management</h1>
+
+          <div className='home--management-container'>
+            <div className='home--management-card'>
+              <FileText />
+              <h3>Smart Document Management</h3>
+              <ul>
+                <li>Automated document categorization</li>
+                <li>Full-text search capabilities</li>
+                <li>Version control and tracking</li>
+                <li>Secure document sharing</li>
+              </ul>
+            </div>
+
+            <div className='home--management-card'>
+              <Clock />
+              <h3>Task Management</h3>
+              <ul>
+                <li>Deadline tracking</li>
+                <li>Team collaboration tools</li>
+                <li>Priority management</li>
+                <li>Progress monitoring</li>
+              </ul>
+            </div>
+
+            <div className='home--management-card'>
+              <Bell />
+              <h3>Gazette Updates</h3>
+              <ul>
+                <li>Real-time notifications</li>
+                <li>Customized alerts</li>
+                <li>Historical archive access</li>
+                <li>Smart filtering options</li>
+              </ul>
+            </div>
+          </div>
+      </section>
+
+      <section className='home--team' id='aboutus'>
+        <h1>Who we are</h1>
+        <p>We are undergraduates transforming legal workflows with AI-powered document management, real-time gazette updates, legal research chatbots, and task management for greater efficiency.</p>
+
+        <p>Get to know the dedicated and creative minds shaping our vision.</p>
+
+        <div className='home--team-container'>
+          {members.map((member) => {
+            return <TeamMember 
+              key={member.name}
+              image={member.image}
+              name={member.name}
+              role={member.role}
+              linkedin={member.linkedin}
+              github={member.github}
+            />
+          })}
         </div>
       </section>
 
-      {/* Section 4 - Gazettes Updates */}
-      <section className="section section-gazzets">
-        <div className="image-content">
-          <img src={Image4} alt="Gazette Updates" />
-        </div>
-        <div className="text-content">
-          <h2>Gazettes <span className="highlight">Updates</span></h2>
-          <button className="btn">Be Updated</button>
-        </div>
+      <section className='home--contactus' id='contactus'>
+          <h1>Contact Us</h1>
+
+          <form className='contactus-form'>
+            <p>Name</p>
+            <input type="text" placeholder='Type you name here...'/>
+
+            <p>Email</p>
+            <input type="email" placeholder='Type you email here...'/>
+
+            <p>Message</p>
+            <textarea placeholder='Type you message here...'/>
+
+            <button type='submit'>Submit</button>
+          </form>
       </section>
 
-      {/* Section 5 - Contacting Clients */}
-      <section className="section section-clients">
-        <div className="text-content">
-          <h2>Contacting <span className="highlight">Clients</span></h2>
-          <button className="btn">Contact</button>
-        </div>
-
-        <div className="image-content">
-          <img src={Image5} alt="Contacting Clients" />
-        </div>
-      </section>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

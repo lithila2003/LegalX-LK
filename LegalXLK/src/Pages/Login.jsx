@@ -13,7 +13,7 @@ const LoginPage = () => {
         <p>Enter your Credentials to access your account</p>
 
         <form>
-          <input type="email" placeholder="Email address" required />
+          <input type="email" placeholder="Email address or Username" required />
           <input type="password" placeholder="Password" required />
           <div className="extras">
             <label>

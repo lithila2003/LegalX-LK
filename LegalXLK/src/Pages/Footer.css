@@ -1,6 +1,6 @@
 .footer {
   width: 100%;
-  background-color: #777776;
+  background-color: black;
   color: rgb(0, 0, 0);
   padding: 4rem 2rem 2rem;
   font-family: system-ui, -apple-system, sans-serif;
@@ -16,14 +16,30 @@
   margin-bottom: 3rem;
   font-size: 1.5rem;
   font-weight: 500;
+  color: white;
+}
+
+.logo > img {
+  height: 40px;
 }
 
 .footerContent {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
+/*   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4rem;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.column {
+  color: white;
+}
+
+.column:first-child > p {
+  max-width: 350px;
 }
 
 .column h3 {
@@ -33,20 +49,21 @@
 }
 
 .column p {
-  color: #000000;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+  color: rgb(192, 187, 187);
 }
 
 .column ul {
   list-style: none;
   padding: 0;
   margin: 0;
+  color: rgb(192, 187, 187);
 }
 
 .column ul li {
-  color: #000000;
   margin-bottom: 0.75rem;
+  cursor: pointer;
 }
 
 .socialIcons {
@@ -66,7 +83,7 @@
 
 .copyright {
   text-align: center;
-  color: #000000;
+  color: white;
   margin-top: 3rem;
   padding-top: 2rem;
   border-top: 1px solid rgba(203, 213, 225, 0.1);
@@ -74,7 +91,7 @@
 
 @media (max-width: 768px) {
   .footerContent {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: grid;
   }
   
   .column {
